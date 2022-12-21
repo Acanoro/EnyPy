@@ -1,0 +1,81 @@
+{{% extends "base.html" %}
+
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        a {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: none;
+            color: #black;
+        }
+        body {
+            margin: 0;
+            background: #F4F1F8;
+        }
+        table {
+            border-collapse: collapse;
+            line-height: 1.1;
+            font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+            background:  radial-gradient(farthest-corner at 50% 50%, white, #DCECF8);
+            color: #0C213B;
+            margin-bottom: 100px;
+            width: 1300px;
+            height: clamp(6.25rem, -0.568rem + 34.09vw, 25rem);
+            margin: auto;
+
+        }
+
+        th {
+            padding: 10px;
+            border: 1px solid #A9E2CC;
+            font-size: 20px;
+            text-align: center;
+        }
+        td {
+            font-size: 1.5em;
+            padding: 5px 7px;
+            border: 1px solid #A9E2CC;
+            text-align: center;
+        }
+        .nav {
+            text-align: center;
+            margin-left: 600px;
+            padding-bottom: 50px;
+
+        }
+
+
+    </style>
+{% endblock %}
+
+{% block main %}
+    <main class="page">
+        <table>
+            <thead>
+              <tr>
+                <th>Название задачи</th>
+                <th>Статус решения задачи</th>
+                <th>code</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for i in task_result %}
+                    <tr>
+                        <th><a href="{{ i.task.get_absolute_url }}">{{ i.name_task }}</a></th>
+                        {% if i.solution %}
+                            <td>Задача решена верно</td>
+                        {% else %}
+                            <td>Задача решена не верно</td>
+                        {% endif %}
+                        <td>{{ i.code }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+{% endblock %}

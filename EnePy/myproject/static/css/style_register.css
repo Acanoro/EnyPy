@@ -1,0 +1,128 @@
+@import url("https://fonts.googleapis.com/css?family=Work+Sans:regular,500,600,700");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/*a {*/
+/*text-decoration: none;*/
+/*}*/
+/*a:hover {*/
+/*text-decoration:none;*/
+/*color:#black;*/
+/*}*/
+
+body {
+    font-family: "Work sans", sans-serif;
+    background-color: #050c1c;
+
+}
+
+main {
+    background: #050c1c;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+input {
+    height: 45px;
+    width: 100%;
+    font-size: 20px;
+    line-height: 16px;
+    border: 2px solid #4989bb;
+    border-radius: 5px;
+    padding-left: 25px;
+    color: #4989bb;
+}
+
+.form-title {
+    color: #4989bb;
+    font-weight: 500;
+    font-size: 40px;
+    line-height: 23px;
+    margin-bottom: 38px;
+}
+
+.register-form-container {
+    max-width: 415px;
+    width: 100%;
+    background-color: #050c1c;
+    box-shadow: 0px 6px 50px #4989bb;
+    border-radius: 20px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 38px;
+    padding-bottom: 38px;
+    z-index: 2;
+}
+
+.form-field {
+    margin-bottom: 13px;
+}
+
+.button {
+    font-weight: 700;
+    height: 45px;
+    display: block;
+
+    border-radius: 5px;
+
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 45px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.button:hover {
+    background-color: #004c86;
+}
+
+a.button {
+    text-decoration: none;
+}
+
+.button-password {
+    color: azure;
+    background: #4989bb;
+
+}
+
+.divider {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+    color: azure;
+    text-align: center;
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+.errorlist {
+    color: #c02626;
+    list-style-type: none;
+    margin-left: 0px;
+    padding-left: 8px;
+    padding-top: 10px;
+}
+
+.note {
+    font-size: 15px;
+    color: aliceblue;
+    padding-bottom: 30px;
+}
+
+.note_1 {
+    color: aliceblue;
+
+}
+
+.note_2 {
+    color: aliceblue;
+}

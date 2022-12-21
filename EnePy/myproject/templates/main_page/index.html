@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block head %}
+<!--"css/style.css"-->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+
+{% block main %}
+    <main class="page">
+    <section class="hero">
+        <div class="hero__container">
+            <div class="hero__content">
+                <h1 class="hero__title">EnePy - учебный ресурс для изучения языка программирования Python </h1>
+                <p class="hero__text text">EnePy лучше всего подходит для начинающих и программистов среднего уровня.
+                    Здесь вы изучите общий синтаксис языка, научитесь работать со строками и условиями, познакомитесь с
+                    циклами, функциями, списками и словарями, а также проверите свои знания </p>
+                <div class="hero__filter filter"></div>
+            </div>
+            <div class="hero__img"><img src="{% static 'img/logo_pyt.webp' %}" alt=""></div>
+        </div>
+    </section>
+</main>
+{% endblock %}
+
