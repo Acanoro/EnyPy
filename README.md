@@ -23,3 +23,5 @@
 5.	в консоли проекта написать cd myproject 
 6.	потом python manage.py runserver 
 7.	Готово! У вас открылся сайт!
+
+Так же сайт был запущен: https://enepy.ru
