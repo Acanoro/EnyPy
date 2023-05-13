@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+    <style>
+        textarea[is="highlighted-code"] {
+            padding: 18px;
+            width: 1024px;
+        }
+
+        .vertical-menu {
+            width: 200px;
+        }
+
+        .vertical-menu a {
+            background-color: #4989bb;
+            color: #d6d6d6;
+            display: block;
+            padding: 12px;
+            text-decoration: none;
+        }
+
+        .vertical-menu a:hover {
+            background-color: #fa9c2a;
+        }
+
+        .vertical-menu a.active {
+            background-color: #072c49;
+            color: white;
+        }
+
+        #wrapper {
+            max-width: 1250px;
+            margin: auto;
+
+        }
+
+        section {
+            margin-left: 280px;
+            padding-bottom: 50px;
+        }
+
+        blockquote {
+            margin: 0;
+            background: #d6d6d6;
+            padding: 10px 20px;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 300;
+        }
+
+        blockquote p {
+            color: #072c49;
+            font-size: 25px;
+            margin: 0;
+        }
+
+        aside {
+            float: left;
+            width: 250px;
+        }
+
+        span {
+            font-weight: bolder;
+        }
+
+
+        .prokrutka {
+            overflow-y: scroll;
+            height: 200px;
+            width: 420px;
+            background: #d6d6d6;
+            border: 1px solid #d6d6d6
+        }
+
+        .section1 {
+            margin-left: 270px;
+        }
+
+        .time {
+            margin-left: 130px;
+        }
+
+        .time2 {
+            padding-top: 10px;
+        }
+
+
+    </style>
+{% endblock %}
+
+{% block main %}
+    <main>
+
+        {% if kr %}
+            <div class="time">
+                <p style="color: white">Осталось времени: <span id="remaining-time">{{ remaining_time }}</span></p>
+
+            </div>
+
+        {% endif %}
+
+        <div id="wrapper">
+            <aside class="aside">
+                <div class="aside__container">
+                    <div class="aside__navigation">
+                        <nav class="aside__menu menu">
+                            <div class="vertical-menu">
+
+                                {% if previous_task %}
+                                    <div class="nav-pageitem">
+                                        <div class="d-grid gap-2">
+                                            {% if kr %}
+                                                <a href="{{ kr_id.get_absolute_url }}?task_slug={{ previous_task.slug }}"
+                                                   class="active">Еще ↑</a>
+                                            {% else %}
+                                                <a href="{{ previous_task.get_absolute_url }}" class="active">Еще ↑</a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% for i in task_list %}
+                                    {% if current_task.pk == i.task.pk %}
+                                        {% if i.solution == True %}
+                                            <a style="color: green" class="selected">{{ i.task.name_task }}</a>
+                                        {% elif i.solution == False %}
+                                            <a style="color: red" class="selected">{{ i.task.name_task }}</a>
+                                        {% else %}
+                                            <a class="selected">{{ i.task.name_task }}</a>
+                                        {% endif %}
+                                    {% else %}
+                                        {% if kr %}
+                                            {% if i.solution == True %}
+                                                <a href="{{ kr_id.get_absolute_url }}?task_slug={{ i.task.slug }}" style="color: green"
+                                                   class="selected">{{ i.task.name_task }}</a>
+                                            {% elif i.solution == False %}
+                                                <a href="{{ kr_id.get_absolute_url }}?task_slug={{ i.task.slug }}" style="color: red"
+                                                   class="selected">{{ i.task.name_task }}</a>
+                                            {% else %}
+                                                <a href="{{ kr_id.get_absolute_url }}?task_slug={{ i.task.slug }}"
+                                                   class="selected">{{ i.task.name_task }}</a>
+                                            {% endif %}
+                                        {% else %}
+                                            {% if i.solution == True %}
+                                                <a href="{{ i.task.get_absolute_url }}" style="color: green"
+                                                   class="selected">{{ i.task.name_task }}</a>
+                                            {% elif i.solution == False %}
+                                                <a href="{{ i.task.get_absolute_url }}" style="color: red"
+                                                   class="selected">{{ i.task.name_task }}</a>
+                                            {% else %}
+                                                <a href="{{ i.task.get_absolute_url }}"
+                                                   class="selected">{{ i.task.name_task }}</a>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if next_task %}
+                                    <div class="nav-pageitem">
+                                        <div class="d-grid gap-2">
+
+
+                                            {% if kr %}
+                                                <a href="{{ kr_id.get_absolute_url }}?task_slug={{ next_task.slug }}"
+                                                   class="active">Еще ↓</a>
+                                            {% else %}
+                                                <a href="{{ next_task.get_absolute_url }}" class="active">Еще ↓</a>
+                                            {% endif %}
+
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if kr %}
+                                    <div class="time2">
+                                        <div class="d-grid gap-2">
+                                            <button class="btn btn-primary" onclick="finishEarly()">Закончить
+                                                раньше
+                                            </button>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </aside>
+            <section>
+                <blockquote>
+                    <p>
+                        {{ current_task.description }}
+                    </p>
+                </blockquote>
+                <div class="container overflow-hidden text-center">
+                    <div class="row gx-5">
+                        <div class="col">
+                            <div class="prokrutka">
+                                <p1>Входные данные</p1>
+                                {% if current_task.additional_input %}
+                                    {% for data in current_task.additional_input.0 %}
+                                        <p>{{ data }}</p>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="prokrutka">
+                                <p1>РЕЗУЛЬТАТ</p1>
+                                {% for data in current_task.data_output.0 %}
+                                    <p>{{ data }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="section1">
+                <form id="form">
+                    <div class="container overflow-hidden">
+                            <textarea is="highlighted-code" cols="80" rows="12" language="Python" tab-size="2"
+                                      auto-height style="width: 960px;"></textarea>
+                        <button class="btn btn-primary" onclick="myFunction()">Отправить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <script>
+        function myFunction() {
+            let code = $('.hljs').text();
+
+            const form = document.getElementById('form')
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                localStorage.setItem('code', code);
+                localStorage.setItem('id_task', "{{i.pk}}");
+                localStorage.setItem('kr', "{{kr}}");
+                localStorage.setItem('task', "{{task}}");
+
+                if (Boolean("{{ kr }}")) {
+                    localStorage.setItem('id_kr', "{{kr_id.pk}}");
+                }
+                window.location.href = "https://enepy.ru/task/" + "{{current_task.slug}}" + "/answer/";
+            })
+
+        }
+    </script>
+    <script type="module">
+        (async ({chrome, netscape}) => {
+
+            // add Safari polyfill if needed
+            if (!chrome && !netscape)
+                await import('https://unpkg.com/@ungap/custom-elements');
+
+
+            const {default: HighlightedCode} =
+                await import('https://unpkg.com/highlighted-code');
+
+
+            // bootstrap a theme through one of these names
+            // https://github.com/highlightjs/highlight.js/tree/main/src/styles
+            HighlightedCode.useTheme('nord');
+        })(self);
+    </script>
+
+    {% if kr %}
+        <script>
+            // установка начального значения времени
+            var remaining_time = "{{ remaining_time }}";
+
+            // Разбиваем строку на массив из трех чисел
+            var timeParts = remaining_time.split(":");
+
+            // Преобразуем каждое число в целое значение
+            var hours = parseInt(timeParts[0]);
+            var minutes = parseInt(timeParts[1]);
+            var seconds = parseInt(timeParts[2]);
+
+            // Вычисляем общее количество секунд
+            var totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
+
+            // функция обновления времени
+            function updateRemainingTime() {
+                // обновление значения времени
+                totalSeconds--;
+                // проверка, если время закончилось
+                if (totalSeconds <= 0) {
+
+                    clearInterval(intervalId);
+                    finishEarly();
+                } else {
+                    // Вычисляем количество часов, минут и секунд
+                    var hours = Math.floor(totalSeconds / 3600);
+                    var minutes = Math.floor((totalSeconds - (hours * 3600)) / 60);
+                    var seconds = totalSeconds - (hours * 3600) - (minutes * 60);
+
+                    // Форматируем результат в виде строки времени h:m:s
+                    var timeString = formatTime(hours) + ":" + formatTime(minutes) + ":" + formatTime(seconds);
+
+                    // Функция formatTime() добавляет ведущий ноль, если число меньше 10
+                    function formatTime(time) {
+                        return time < 10 ? "0" + time : time;
+                    }
+
+                    // обновление отображаемого значения времени
+                    document.getElementById('remaining-time').innerHTML = timeString;
+                }
+            }
+
+            // функция для завершения теста раньше времени
+            function finishEarly() {
+                clearInterval(intervalId);
+                // создание объекта с параметрами строки запроса
+                var queryParams = {
+                    remaining_time: remaining_time,
+                    end_time: new Date().toISOString() // текущее время в формате ISO
+                };
+                // добавление параметров строки запроса к URL-адресу
+                var url = "{{ kr_id.get_absolute_url_1 }}?" + new URLSearchParams(queryParams).toString();
+                // перенаправление пользователя на страницу результатов с параметрами строки запроса
+                window.location.href = url;
+            }
+
+            // запуск функции обновления каждую секунду
+            var intervalId = setInterval(updateRemainingTime, 1000);
+        </script>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+
+{% block main %}
+
+    <main>
+        <div class="container text-center">
+            <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
+                {% for i in controls %}
+                    <div class="col">
+                        <button type="button" class="btn btn-light btn-lg" data-bs-toggle="modal"
+                                data-bs-target="#staticBackdrop{{ i.pk }}"> Контрольная работа {{ i.name }}
+                        </button>
+                        {#<!--                    <a class="btn btn-light btn-lg" href="{{ i.get_absolute_url }}" role="button">Контрольная работа {{-->#}
+                        {#<!--                        i.name }}</a>-->#}
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="staticBackdrop{{ i.pk }}" data-bs-backdrop="static"
+                         data-bs-keyboard="false"
+                         tabindex="-1" aria-labelledby="staticBackdropLabel{{ i.pk }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel{{ i.pk }}">Контрольная
+                                        работа {{ i.name }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+
+                                    <div class="input-group mb-3">
+                                        <h4>Тест с ограничением по времени</h4>
+                                        <p style="text-align: left;">
+                                            Время на тест ограничено. Будет идти обратный отсчет времени с момента
+                                            начала
+                                            вашей попытки. Вы должны завершить попытку теста до окончания времени. Вы
+                                            уверены, что хотите начать прямо сейчас?
+
+                                            <br>Время начала: {{ i.time_start }}</br>
+                                            <br>Время завершения: {{ i.time_end }}</br>
+                                            <br>Количество баллов: {{ i.passing_score }}</br>
+                                            {% for j in number_attempts_used %}
+                                                {% if j.name == i.name %}
+                                                    <br>Количество попыток: {{ j.name }} {{ j.number_attempts_used }}/
+                                                    {{ i.number_attempts }}</br>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </p>
+                                    </div>
+                                </div>
+
+
+                                <div class="modal-footer">
+                                    {% for j in number_attempts_used %}
+                                        {% if j.name == i.name %}
+                                            {% if j.number_attempts_used > 0 %}
+                                                {% if 'goes_cr' not in request.session %}
+                                                    <a class="btn btn-success" href="{{ i.get_absolute_url }}"
+                                                       role="button">Начать попытку</a>
+                                                {% else %}
+                                                    <a class="btn btn-success" href="{{ i.get_absolute_url }}"
+                                                       role="button">Продолжить</a>
+                                                {% endif %}
+                                                {% if j.number_attempts_used > 0 and j.number_attempts_used != i.number_attempts %}
+                                                    <a class="btn btn-success" href="{{ i.get_absolute_url_1 }}"
+                                                       role="button">Посмотреть результаты</a>
+                                                {% endif %}
+                                            {% else %}
+                                                <a class="btn btn-success" href="{{ i.get_absolute_url_1 }}"
+                                                   role="button">Посмотреть результаты</a>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Отмена</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+{% endblock %}
